@@ -93,7 +93,12 @@ services:
      - 8080:8080
     volumes:
      - /Users/admin/docker-data/tomcat:/bitnami
+    environment:
+      - TOMCAT_ALLOW_REMOTE_MANAGEMENT=1
+      - TOMCAT_USERNAME=tomcat
+      - TOMCAT_PASSWORD=tomcat
 
+# container networking
 networks:
   ci-cd-network: 
     name: ci-cd-network
