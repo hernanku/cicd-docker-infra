@@ -74,8 +74,8 @@ services:
     volumes:
      - /Users/admin/docker-data/artifactory/data:/var/opt/jfrog/artifactory
 #    Add extra Java options by uncommenting the following lines
-#    environment:
-#     - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx4g
+    environment:
+    - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx1g
     restart: always
     ulimits:
       nproc: 65535
