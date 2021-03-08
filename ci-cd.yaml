@@ -2,19 +2,19 @@ version: '3.7'
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts
-    networks: 
-      - ci-cd-network
-    privileged: true
-    user: root
-    ports:
-      - 8081:8080
-      - 50000:50000
-    container_name: jenkins
-    volumes:
-      - /docker-data/jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker:/usr/local/bin/docker
+      image: jenkins/jenkins:lts
+      networks: 
+        - ci-cd-network
+      privileged: true
+      user: root
+      ports:
+        - 8081:8080
+        - 50000:50000
+      container_name: jenkins
+      volumes:
+        - /Users/admin/docker-data/jenkins:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/local/bin/docker:/usr/local/bin/docker
 
   sonarqube:
       image: sonarqube:8-community
@@ -30,42 +30,42 @@ services:
       #   SONAR_JDBC_USERNAME: sonar
       #   SONAR_JDBC_PASSWORD: sonar
       volumes:
-        - /docker-data/sonarqube/data:/opt/sonarqube/data
-        - /docker-data/sonarqube/extensions:/opt/sonarqube/extensions
-        - /docker-data/sonarqube/logs:/opt/sonarqube/logs
-        - /docker-data/sonarqube/temp:/opt/sonarqube/temp
+        - /Users/admin/docker-data/sonarqube/data:/opt/sonarqube/data
+        - /Users/admin/docker-data/sonarqube/extensions:/opt/sonarqube/extensions
+        - /Users/admin/docker-data/sonarqube/logs:/opt/sonarqube/logs
+        - /Users/admin/docker-data/sonarqube/temp:/opt/sonarqube/temp
       ports:
         - "8082:9000"
       restart: always
 
   artifactory:
-    image: docker.bintray.io/jfrog/artifactory-cpp-ce:latest
-    container_name: artifactory
-    networks: 
-      - ci-cd-network
-    ports:
-     - 8083:8081
-     - 8084:8082
-    # depends_on:
-    #  - artifactory-db
-    # links:
-    #  - artifactory-db
-    volumes:
-     - /docker-data/artifactory/data:/var/opt/jfrog/artifactory
-     - /docker-data/artifactory/postgresql/driver/postgresql-42.2.18.jar:/var/opt/jfrog/artifactory/tomcat/lib/postgresql-42.2.18.jar
-    # environment:
-    #   - DB_TYPE=postgresql
-    #   # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
-    #   - DB_USER=artifactory
-    #   - DB_PASSWORD=artifactory
-    #   # Add extra Java options by uncommenting the following line
-    #   - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx4g
-    restart: always
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 32000
-        hard: 40000
+      image: docker.bintray.io/jfrog/artifactory-cpp-ce:latest
+      container_name: artifactory
+      networks: 
+        - ci-cd-network
+      ports:
+      - 8083:8081
+      - 8084:8082
+      # depends_on:
+      #  - artifactory-db
+      # links:
+      #  - artifactory-db
+      volumes:
+      - /Users/admin/docker-data/artifactory/data:/var/opt/jfrog/artifactory
+      #  - /docker-data/artifactory/postgresql/driver/postgresql-42.2.18.jar:/var/opt/jfrog/artifactory/tomcat/lib/postgresql-42.2.18.jar
+      environment:
+      #   - DB_TYPE=postgresql
+      #   # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
+      #   - DB_USER=artifactory
+      #   - DB_PASSWORD=artifactory
+        # Add extra Java options by uncommenting the following line
+        - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx4g
+      restart: always
+      ulimits:
+        nproc: 65535
+        nofile:
+          soft: 32000
+          hard: 40000
 
   # sonarqube-db:
   #   image: postgres:12
@@ -90,8 +90,8 @@ services:
   #     ARTIFACTORY_DB_USER: artifactory
   #     ARTIFACTORY_DB_PASSWORD: artifactory
   #     ARTIFACTORY_DB: artifactory
-  #   volumes:
-  #     - /docker-data/artifactory/db-data:/var/lib/postgresql
+    # volumes:
+    #   - /Users/admin/docker-data/artifactory/db-data:/var/lib/postgresql
 
 networks:
   ci-cd-network: 
