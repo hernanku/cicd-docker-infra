@@ -1,7 +1,15 @@
-version: '3.7'
+version: '3.9'
 services:
   jenkins:
       image: jenkins/jenkins:lts
+      # deploy:
+      #   resources:
+      #     limits:
+      #       # cpus: '1'
+      #       memory: 2048M
+      #     reservations:
+      #       # cpus: '0.25'
+      #       memory: 512M
       networks: 
         - ci-cd-network
       privileged: true
@@ -14,6 +22,8 @@ services:
         - /Users/admin/docker-data/jenkins:/var/jenkins_home
         - /var/run/docker.sock:/var/run/docker.sock
         - /usr/local/bin/docker:/usr/local/bin/docker
+      # environment:
+      #   - JAVA_OPTS=-Xms512m -Xmx2g -Djava.awt.headless=true
 
   # sonarqube:
   #     image: sonarqube:8-community
@@ -66,6 +76,14 @@ services:
   # Artifactory service
   artifactory:
     image: docker.bintray.io/jfrog/artifactory-oss:6.23.13
+    deploy:
+      resources:
+        limits:
+          # cpus: '1'
+          memory: 2048M
+        reservations:
+          # cpus: '0.25'
+          memory: 512M
     networks: 
       - ci-cd-network
     container_name: artifactory
@@ -75,7 +93,7 @@ services:
      - /Users/admin/docker-data/artifactory/data:/var/opt/jfrog/artifactory
 #    Add extra Java options by uncommenting the following lines
     environment:
-    - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx1g
+    - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx2g
     restart: always
     ulimits:
       nproc: 65535
@@ -86,6 +104,14 @@ services:
   # Tomcat server
   tomcat:
     image: docker.io/bitnami/tomcat:9.0-debian-10
+    deploy:
+      resources:
+        limits:
+          # cpus: '1'
+          memory: 2048M
+        reservations:
+          # cpus: '0.25'
+          memory: 512M
     networks: 
       - ci-cd-network
     container_name: tomcat-server

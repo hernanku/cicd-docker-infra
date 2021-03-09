@@ -12,7 +12,7 @@ ARG USER_HOME_DIR="/root"
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 # 5- Create the directories, download maven, validate the download, install it, remove downloaded file and set links
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref "$USER_HOME_DIR/.m2" \
   && echo "Downlaoding maven" \
   && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   \
@@ -26,6 +26,12 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 # 6- Define environmental variables required by Maven, like Maven_Home directory and where the maven repo is located
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+COPY settings.xml settings-security.xml "$USER_HOME_DIR/.m2"
+RUN mvn -N io.takari:maven:wrapper -Dmaven=3.6.3 \
+  && mv mvnw mvnw.cmd /usr/bin
+
+
 
 
 CMD [""]
