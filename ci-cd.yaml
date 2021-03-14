@@ -11,7 +11,7 @@ services:
       NGROK_AUTH: 1QLHjKxOEARPFzRgZSsAbAmuo45_5EZUh1F4DCv8tP27NzoB9
       NGROK_DEBUG: "true"
   jenkins:
-      image: jenkins-master-docker:0.3.2
+      image: hernanku/jenkins-docker:1.0
       # deploy:
       #   resources:
       #     limits:
