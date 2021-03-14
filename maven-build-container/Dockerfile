@@ -29,14 +29,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref /root/.m2/repository \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG /root/.m2
 
-COPY settings.xml /root/.m2
-#   && mv mvnw mvnw.cmd /usr/bin
-# WORKDIR $USER_HOME_DIR
-
-# RUN mkdir -p "$USER_HOME_DIR/.mvn" \ 
-#   && cd "$USER_HOME_DIR/.mvn" \
-#   && mvn -N io.takari:maven:wrapper -Dmaven=3.6.3 
-
+WORKDIR $USER_HOME_DIR
 
 CMD [""]
 
