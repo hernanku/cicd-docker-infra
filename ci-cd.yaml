@@ -1,5 +1,15 @@
 version: '3.9'
 services:
+  ngrok: 
+    image: wernight/ngrok
+    container_name: ngrok-jenkins
+    command: ngrok http <jenkins_url>:8081
+    # port for ngrok ui
+    ports:
+      - 4040:4040
+    environment: 
+      NGROK_AUTH: <NGROK-AUTH-KEY>
+      NGROK_DEBUG: "true"
   jenkins:
       image: jenkins/jenkins:lts
       # deploy:
