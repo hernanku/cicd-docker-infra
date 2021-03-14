@@ -1,5 +1,7 @@
 FROM openjdk:8-jdk-alpine
-RUN apk add --no-cache curl tar bash procps
+RUN apk update \
+  && apk add --no-cache curl tar bash procps \
+  && apk add --upgrade junit
 
 # Downloading and installing Maven
 # 1- version of maven you want to install
@@ -12,7 +14,7 @@ ARG USER_HOME_DIR="/root"
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 # 5- Create the directories, download maven, validate the download, install it, remove downloaded file and set links
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref "$USER_HOME_DIR/.m2" \
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref /root/.m2/repository \
   && echo "Downlaoding maven" \
   && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   \
@@ -25,17 +27,16 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref "$USER_HOME_DIR/.m2" \
 
 # 6- Define environmental variables required by Maven, like Maven_Home directory and where the maven repo is located
 ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+ENV MAVEN_CONFIG /root/.m2
 
-COPY settings.xml settings-security.xml "$USER_HOME_DIR/.m2"
-RUN mvn -N io.takari:maven:wrapper -Dmaven=3.6.3 \
-  && mv mvnw mvnw.cmd /usr/bin
+COPY settings.xml /root/.m2
+#   && mv mvnw mvnw.cmd /usr/bin
+# WORKDIR $USER_HOME_DIR
 
-
+# RUN mkdir -p "$USER_HOME_DIR/.mvn" \ 
+#   && cd "$USER_HOME_DIR/.mvn" \
+#   && mvn -N io.takari:maven:wrapper -Dmaven=3.6.3 
 
 
 CMD [""]
-
-
-
 
