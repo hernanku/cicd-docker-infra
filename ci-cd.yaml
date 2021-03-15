@@ -1,15 +1,14 @@
 version: '3.9'
 services:
-
-#  pushgateway:
-#    image: prom/pushgateway
-#    restart: always
-#    expose:
-#      - 9091
-#    ports:
-#      - "9091:9091"
-#    networks:
-#      - back-tier
+  pushgateway:
+    image: prom/pushgateway
+    restart: always
+    expose:
+      - 9091
+    ports:
+      - "9091:9091"
+    networks:
+      - back-tier
   ngrok: 
     image: wernight/ngrok
     container_name: ngrok-jenkins
@@ -44,9 +43,8 @@ services:
       volumes:
         - /Users/admin/docker-data/jenkins:/var/jenkins_home
         - /var/run/docker.sock:/var/run/docker.sock
-        # - /usr/local/bin/docker:/usr/local/bin/docker
-      # environment:
-      #   - JAVA_OPTS=-Xms512m -Xmx2g -Djava.awt.headless=true
+      environment:
+        - JAVA_OPTS=-Xms512m -Xmx2g -Djava.awt.headless=true
 
   # sonarqube:
   #     image: sonarqube:8-community
@@ -102,10 +100,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          # cpus: '1'
           memory: 2048M
         reservations:
-          cpus:  '0.5'
+          # cpus:  '0.5'
           memory: 512M
     networks: 
       - ci-cd-network
@@ -153,7 +151,7 @@ services:
       - ci-cd-network
     volumes:
       - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/prometheus
+      - /Users/admin/docker-data/prometheus/data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -164,15 +162,15 @@ services:
     links:
       - cadvisor:cadvisor
       - alertmanager:alertmanager
-#      - pushgateway:pushgateway
+      - pushgateway:pushgateway
     depends_on:
       - cadvisor
-#      - pushgateway
+      - pushgateway
     restart: always
-#    deploy:
-#      placement:
-#        constraints:
-#          - node.hostname == ${HOSTNAME}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ${HOSTNAME}
 
   node-exporter:
     image: prom/node-exporter
@@ -200,15 +198,15 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - ./prometheus/alertmanager/:/etc/alertmanager/
     restart: always
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-#    deploy:
-#      placement:
-#        constraints:
-#          - node.hostname == ${HOSTNAME}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ${HOSTNAME}
   cadvisor:
     image: google/cadvisor
     networks: 
@@ -234,10 +232,10 @@ services:
     ports:
       - 3010:3000
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - /Users/admin/docker-data/grafana/data:/var/lib/grafana
+      - .prometheus/grafana/provisioning/:/etc/grafana/provisioning/
     env_file:
-      - ./grafana/config.monitoring
+      - ./prometheus/grafana/config.monitoring
     restart: always
 
 # container networking
